@@ -69,12 +69,10 @@ class DbManager:
             self.model = SentenceTransformer('all-MiniLM-L6-v2')
 
             self.mode = self.get_mode()
+            if self.mode == 0:
+                self.mode = 1
+                self.connection.execute("INSERT INTO modetable (mode) VALUES (?);", [self.mode])
 
-
-            self.connection.execute("INSERT INTO modetable (mode) VALUES (?);", [self.mode])
-
-            if not self.openai_available:
-                self.set_session_mode(use_openai=False)
 
         except Exception as e:
             print(f"Kritischer Fehler bei der Initialisierung: {e}")
@@ -94,7 +92,7 @@ class DbManager:
     def set_session_mode(self, use_openai):
         self.allow_openai_this_run = use_openai
         if not use_openai:
-            self.openai_available = False
+            self.allow_openai_this_run = False
         print(f"Modus gesetzt: {'OpenAI + Lokal' if use_openai else 'Nur Lokal'}")
 
     def create_chunks_and_vectorize(self, content):

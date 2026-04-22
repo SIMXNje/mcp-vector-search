@@ -7,7 +7,7 @@ mcp = FastMCP("PDF-Knowledge-Base")
 
 db = DbManager()
 
-db.set_session_mode(db.openai_available)
+db.set_session_mode(use_openai=True)
 
 
 @mcp.tool()
